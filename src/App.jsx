@@ -488,6 +488,11 @@ function App() {
                     {item.ticketId} • <span className={`role-badge ${!item.memberNumber ? 'role-leader' : 'role-member'}`}>
                       {!item.memberNumber ? 'LEADER' : 'MEMBER'}
                     </span>
+                    {item.checkedIn && item.checkInTime && (
+                      <span style={{ marginLeft: '6px', color: '#10b981' }}>
+                        • {new Date(item.checkInTime.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="col-action">

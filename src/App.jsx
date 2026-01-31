@@ -157,8 +157,10 @@ function App() {
           fps: 10,
           qrbox: { width: 250, height: 250 },
           aspectRatio: 1.0,
-          // preferFrontCamera: false, // Default is back
-          showTorchButtonIfSupported: true
+          showTorchButtonIfSupported: true,
+          videoConstraints: {
+            facingMode: "environment"
+          }
         },
         false
       );

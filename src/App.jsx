@@ -317,6 +317,13 @@ function App() {
   const toggleCheckIn = async (item) => {
     try {
       const shouldCheckIn = !item.checkedIn;
+
+      // Double Verification Logic
+      if (shouldCheckIn) {
+        const confirmed = window.confirm(`Do you really want to MANUALLY Check In ${item.name}?`);
+        if (!confirmed) return;
+      }
+
       const now = Timestamp.now();
 
       // Optimistic Update
@@ -325,31 +332,42 @@ function App() {
         checkedIn: shouldCheckIn ? prev.checkedIn + 1 : prev.checkedIn - 1
       }));
 
+      const updateLocal = (i) => ({
+        ...i,
+        checkedIn: shouldCheckIn,
+        checkInTime: shouldCheckIn ? now : null,
+        isManualCheckIn: shouldCheckIn
+      });
+
       setDataList(prev => prev.map(i =>
-        i.ticketId === item.ticketId
-          ? { ...i, checkedIn: shouldCheckIn, checkInTime: shouldCheckIn ? now : null }
-          : i
+        i.ticketId === item.ticketId ? updateLocal(i) : i
       ));
 
-      // Update Map for fast lookups
+      // Update Map
       const entry = dataMap.get(item.ticketId);
       if (entry) {
         entry.data.checkedIn = shouldCheckIn;
         entry.data.checkInTime = shouldCheckIn ? now : null;
         entry.data.status = shouldCheckIn ? 'checked-in' : 'pending';
+        entry.data.isManualCheckIn = shouldCheckIn;
       }
 
       // DB Update
+      const commonFields = {
+        checkedIn: shouldCheckIn,
+        checkInTime: shouldCheckIn ? now : null,
+        status: shouldCheckIn ? 'checked-in' : 'pending',
+        isManualCheckIn: shouldCheckIn
+      };
+
       let updatePayload = {};
       if (entry.isLeader) {
-        updatePayload = { checkedIn: shouldCheckIn, checkInTime: shouldCheckIn ? now : null, status: shouldCheckIn ? 'checked-in' : 'pending' };
+        updatePayload = { ...commonFields };
       } else {
         const newMembers = [...entry.fullDoc.members];
         newMembers[entry.memberIndex] = {
           ...newMembers[entry.memberIndex],
-          checkedIn: shouldCheckIn,
-          checkInTime: shouldCheckIn ? now : null,
-          status: shouldCheckIn ? 'checked-in' : 'pending'
+          ...commonFields
         };
         updatePayload = { members: newMembers };
       }
@@ -359,7 +377,6 @@ function App() {
     } catch (err) {
       console.error("Toggle Error", err);
       alert("Failed to update status");
-      // Revert if needed (implement if critical)
     }
   };
 

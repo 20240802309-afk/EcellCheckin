@@ -485,7 +485,7 @@ function App() {
                   <div className="team-text">{item.team}</div>
                   <div className="meta-text">
                     {item.ticketId} • <span className={`role-badge ${!item.memberNumber ? 'role-leader' : 'role-member'}`}>
-                      {!item.memberNumber ? 'L' : 'M'}
+                      {!item.memberNumber ? 'LEADER' : 'MEMBER'}
                     </span>
                   </div>
                 </div>

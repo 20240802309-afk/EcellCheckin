@@ -324,9 +324,10 @@ function App() {
       if (shouldCheckIn) {
         const confirmed = window.confirm(`Do you really want to MANUALLY Check In ${item.name}?`);
         if (!confirmed) return;
-      }
-
-      const now = Timestamp.now();
+      } else {
+        const confirmed = window.confirm(`⚠️ WARNING: Do you really want to UNDO the check-in for ${item.name}?`);
+        if (!confirmed) return;
+      } const now = Timestamp.now();
 
       // Optimistic Update
       setStats(prev => ({

@@ -100,7 +100,8 @@ function App() {
                   status: member.status || 'pending',
                   checkedIn: member.checkedIn,
                   checkInTime: member.checkInTime,
-                  ticketId: member.ticketId
+                  ticketId: member.ticketId,
+                  memberNumber: member.memberNumber // Added this!
                 },
                 fullDoc: data
               };

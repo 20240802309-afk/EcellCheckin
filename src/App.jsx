@@ -73,7 +73,8 @@ function App() {
               status: data.status,
               checkedIn: data.checkedIn,
               checkInTime: data.checkInTime, // Ensure this exists
-              ticketId: data.ticketId
+              ticketId: data.ticketId,
+              isManualCheckIn: data.isManualCheckIn
             },
             fullDoc: data
           };
@@ -101,7 +102,8 @@ function App() {
                   checkedIn: member.checkedIn,
                   checkInTime: member.checkInTime,
                   ticketId: member.ticketId,
-                  memberNumber: member.memberNumber // Added this!
+                  memberNumber: member.memberNumber, // Added this!
+                  isManualCheckIn: member.isManualCheckIn
                 },
                 fullDoc: data
               };
@@ -499,6 +501,17 @@ function App() {
                 <div className="col-info">
                   <div className="name-text">
                     {item.name}
+                    {item.isManualCheckIn && (
+                      <span style={{
+                        marginLeft: '8px',
+                        fontSize: '0.65rem',
+                        background: '#f59e0b',
+                        color: 'black',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontWeight: 'bold'
+                      }}>MANUAL</span>
+                    )}
                   </div>
                   <div className="team-text">{item.team}</div>
                   <div className="meta-text">
